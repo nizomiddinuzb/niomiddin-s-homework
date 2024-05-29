@@ -187,3 +187,7 @@ h3{
   width: 17px;
   height: 16px;
 }
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

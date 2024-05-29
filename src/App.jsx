@@ -11,8 +11,11 @@ import smallImg4 from './images/image-product-4.jpg';
 import Shape from './images/icon-cart.svg';
 
 const App = () => {
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(1); // Initialize quantity to 1
     const [cartQuantity, setCartQuantity] = useState(0);
+    const [bigImageSrc, setBigImageSrc] = useState(BigImg);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const basePrice = 125.00;
 
     const increaseQuantity = () => {
@@ -20,15 +23,18 @@ const App = () => {
     };
 
     const decreaseQuantity = () => {
-        setQuantity(prevQuantity => (prevQuantity > 0 ? prevQuantity - 1 : 0));
+        setQuantity(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1)); // Ensure quantity doesn't go below 1
     };
 
     const calculateTotalPrice = () => {
         return (basePrice * quantity).toFixed(2);
     };
 
-    const [bigImageSrc, setBigImageSrc] = useState(BigImg);
     const smallImages = [SmallImg, smallImg2, smallImg3, smallImg4];
+
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+    };
 
     return (
         <div>
@@ -54,8 +60,9 @@ const App = () => {
                 </nav>
             </header>
             <main>
-                <div className="images__div">
-                    <img className="big__img" src={bigImageSrc} alt="Big Image" />
+                <div className={`overlay ${isModalOpen ? 'active' : ''}`} onClick={toggleModal}></div>
+                <div className={`images__div ${isModalOpen ? 'modal' : ''}`}>
+                    <img className="big__img" src={bigImageSrc} alt="Big Image" onClick={toggleModal} />
                     <div className="display-flex">
                         {smallImages.map((src, index) => (
                             <img
@@ -77,7 +84,10 @@ const App = () => {
                     
                     <div className="flex">
                         <div className='buttons'>
-                            <p className='minus' onClick={decreaseQuantity}>-</p>
+                            <p 
+                                className={`minus ${quantity === 1 ? 'disabled' : ''}`} 
+                                onClick={quantity > 1 ? decreaseQuantity : null}
+                            >-</p>
                             <h3>{quantity}</h3>
                             <p className='pilus' onClick={increaseQuantity}>+</p>
                         </div>
